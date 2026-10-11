@@ -1,21 +1,36 @@
-# Bioimaging Statistics Notebooks
+# Melanoma Feature Extraction (C++)
 
-Small notebooks and scripts for the statistical analysis that sits behind bioimaging experiments: comparing groups, and reporting spread and precision correctly alongside image derived measurements.
+Handcrafted feature extraction from skin lesion (melanoma) images, written in C++ with OpenCV. This is the feature extraction front end for the classification project in [melanoma-skin-lesion-classification](https://github.com/sule213/melanoma-skin-lesion-classification): it turns a lesion image into a numeric feature vector that the machine learning notebooks then classify.
 
-## Contents
+## What it does
 
-- `ANOVA.ipynb` - one way analysis of variance (ANOVA) for comparing measurements across groups
-- `Standard Deviation.ipynb` - standard deviation: spread of measurements within a group
-- `Standard Error of Mean.ipynb` - standard error of the mean (SEM): precision of the group mean
-- `SEM.py` - standard error of the mean as a reusable Python script (the same calculation as the notebook)
-- `plot.ipynb` - plotting measurements for figures
+For each input image, the code:
 
-## How to use
+1. Detects keypoints with the Features from Accelerated Segment Test (FAST) corner detector
+2. Segments the lesion with GrabCut
+3. Applies mean shift filtering and k-means colour quantisation
+4. Measures the lesion contour and shape: area, perimeter, circularity, aspect ratio, roundness, compactness, extent, and fitted ellipse values
+5. Computes colour and texture statistics: entropy, skewness, kurtosis, variance, luminance, and average intensity
 
-Open the notebooks in Jupyter and replace the example values with your own measurements (for example, per image or per cell measurements exported from an image analysis pipeline). Each notebook is self contained and works through the calculation step by step, so it can also be used for teaching.
+The output feature set combines shape descriptors with colour and texture statistics for benign versus malignant classification.
 
-Requirements: Python with NumPy, Pandas, and Matplotlib, plus Jupyter for the notebooks.
+## Repository contents
+
+- `melanoma` - the single source file (666 lines of C++). It has no file extension in this repository.
+
+## Building and running
+
+You need a C++ compiler and OpenCV installed. Copy or rename the source file to give it a `.cpp` extension, then build, for example:
+
+```bash
+cp melanoma melanoma_feature_extraction.cpp
+g++ -std=c++17 melanoma_feature_extraction.cpp -o extract_features $(pkg-config --cflags --libs opencv4)
+./extract_features
+```
+
+Input image paths are set in the code (the file includes example benign and malignant image paths). Edit them to point at your own lesion images before running.
 
 ## Notes
 
-- These notebooks support the analysis in my bioimaging repositories, including [optical-flow-scratch-wound-analysis](https://github.com/sule213/optical-flow-scratch-wound-analysis).
+- No images are included in this repository.
+- Companion classification notebooks: [melanoma-skin-lesion-classification](https://github.com/sule213/melanoma-skin-lesion-classification)
