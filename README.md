@@ -16,14 +16,13 @@ The output feature set combines shape descriptors with colour and texture statis
 
 ## Repository contents
 
-- `melanoma` - the single source file (666 lines of C++). It has no file extension in this repository.
+- `melanoma_feature_extraction.cpp` - the single source file (666 lines of C++).
 
 ## Building and running
 
-You need a C++ compiler and OpenCV installed. Copy or rename the source file to give it a `.cpp` extension, then build, for example:
+You need a C++ compiler and OpenCV installed. Build with, for example:
 
 ```bash
-cp melanoma melanoma_feature_extraction.cpp
 g++ -std=c++17 melanoma_feature_extraction.cpp -o extract_features $(pkg-config --cflags --libs opencv4)
 ./extract_features
 ```
